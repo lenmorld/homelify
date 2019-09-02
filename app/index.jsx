@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import Homes from "./Homes";
+
 class App extends React.Component {
 	render() {
-		return <div>React: Hello World!</div>;
+		return <Homes />;
 	}
 }
 

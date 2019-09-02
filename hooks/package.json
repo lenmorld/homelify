@@ -21,6 +21,7 @@
 	},
 	"homepage": "https://github.com/lenmorld/react_workshop#readme",
 	"dependencies": {
+		"@babel/plugin-proposal-class-properties": "^7.5.5",
 		"axios": "^0.19.0",
 		"express": "^4.16.3",
 		"react": "^16.5.2",
