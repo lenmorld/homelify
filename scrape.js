@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const db = require('diskdb');
-db.connect('./data', ['condos']);
+db.connect('./data', ['condos', 'logs']);
 
 // TEST CODE
 // if (!db.condos.find().length) {
@@ -11,6 +11,7 @@ db.connect('./data', ['condos']);
 // console.log(db.condos.find());
 
 module.exports = function () {
+	const timestamp = Date.now();
 	axios.get('https://www.centris.ca/en/properties~for-sale~montreal-island?uc=1&view=Thumbnail').then(res => {
 		if (res.status === 200) {
 			// console.log(res.data);
@@ -28,6 +29,7 @@ module.exports = function () {
 					features: $(this).find('.features').text().trim(),
 					price: $(this).find('.price [itemprop="price"]').text().trim(),
 					description: $(this).find('.thumbnail meta[itemprop="name"]').attr('content'),
+					date_last_update: timestamp
 				};
 
 				real_estates.push(real_estate);
@@ -39,17 +41,39 @@ module.exports = function () {
 				multi: true, // update multiple
 				upsert: true // if object is not found, add it (update-insert)
 			}
+			let updated = 0, inserted = 0;
 			real_estates.forEach(r_e => {
 				// use id to update if already exist, insert if not
 				const query = {
 					id: r_e.id
 				}
-				const updated = db.condos.update(query, r_e, update_options);
-				console.log(updated, r_e.id);
+				const result = db.condos.update(query, r_e, update_options);
+				console.log(result, r_e.id);
+				if (result.updated) {
+					updated++;
+				} else if (result.inserted) {
+					inserted++;
+				}
 			})
+
+			// save log for successful update
+			db.logs.save({
+				success: true,
+				timestamp: timestamp,
+				inserted: inserted,
+				udpated: updated,
+			});
 		}
 	}, (err) => {
 		console.error(err);
+		// save log for failed attempt
+		db.logs.save({
+			success: false,
+			timestamp: timestamp,
+			inserted: 0,
+			udpated: 0,
+			reason: err,
+		});
 	});
 }
 
