@@ -12,6 +12,8 @@ db.connect('./data', ['condos', 'logs']);
 
 module.exports = function () {
 	const timestamp = Date.now();
+	// current Unix day, ex. 18147 for 9/8/2019
+	const date_now = Math.floor(timestamp / (1000 * 60 * 60 * 24));
 	axios.get('https://www.centris.ca/en/properties~for-sale~montreal-island?uc=1&view=Thumbnail').then(res => {
 		if (res.status === 200) {
 			// console.log(res.data);
@@ -29,7 +31,7 @@ module.exports = function () {
 					features: $(this).find('.features').text().trim(),
 					price: $(this).find('.price [itemprop="price"]').text().trim(),
 					description: $(this).find('.thumbnail meta[itemprop="name"]').attr('content'),
-					date_last_update: timestamp
+					date_last_run: date_now
 				};
 
 				real_estates.push(real_estate);
@@ -60,6 +62,7 @@ module.exports = function () {
 			db.logs.save({
 				success: true,
 				timestamp: timestamp,
+				date_last_run: date_now,
 				inserted: inserted,
 				udpated: updated,
 			});
@@ -70,6 +73,7 @@ module.exports = function () {
 		db.logs.save({
 			success: false,
 			timestamp: timestamp,
+			date_last_run: date_now,
 			inserted: 0,
 			udpated: 0,
 			reason: err,

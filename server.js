@@ -2,7 +2,7 @@
 const express = require("express");
 const server = express();
 const db = require('diskdb');
-db.connect('./data', ['condos']);
+db.connect('./data', ['condos', 'logs']);
 
 const scrape = require('./scrape');
 
@@ -29,4 +29,13 @@ server.listen(port, function () {
 });
 
 // RUN SCRAPER once a day
-scrape();
+// TODO: maybe put this in a config, .env file instead of db
+const timestamp = Date.now();
+const date_now = Math.floor(timestamp / (1000 * 60 * 60 * 24));
+
+const date_last_run = db.logs.find({
+	date_last_run: date_now
+});
+if (!date_last_run.length) {
+	scrape();
+}
