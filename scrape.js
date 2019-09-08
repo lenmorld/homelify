@@ -39,8 +39,14 @@ module.exports = function () {
 				multi: true, // update multiple
 				upsert: true // if object is not found, add it (update-insert)
 			}
-			var updated = db.articles.update({}, real_estates, update_options);
-			console.log(updated);
+			real_estates.forEach(r_e => {
+				// use id to update if already exist, insert if not
+				const query = {
+					id: r_e.id
+				}
+				const updated = db.condos.update(query, r_e, update_options);
+				console.log(updated, r_e.id);
+			})
 		}
 	}, (err) => {
 		console.error(err);
