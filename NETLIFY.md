@@ -35,12 +35,19 @@ exports.handler = function(event, context, callback) {
 ### Using `serverless-http` with Express
 
 ``` javascript
-router.get('/', (req, res) => {
-    res.json("Hello, world");
+// Netlify Lambda
+router.get("/", (req, res) => {
+    res.json("Hello Netlify Lambda");
 })
 
-app.use('/.netlify/functions/server', router)
+router.get("/api/items", (req, res) => {
+    res.json(db.condos.find());
+})
 
-module.exports.handler = serverless(app)
+server.use('/.netlify/functions/server', router);
+
+module.exports.handler = serverless(server);
 ```
+
+Then go to http://localhost:4000/.netlify/functions/server/
 
