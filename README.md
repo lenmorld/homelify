@@ -17,7 +17,16 @@ Real estate scraper for around Quebec
 
 TODO: 
 
-* RUNNER: trigger script through a scheduler, instead of server start
+* RUNNER: trigger script through a scheduler, instead of server start 
 * UI: continue work on items view
-* DEPLOY: make API work through Netlify functions
+* ➖ DEPLOY: make API work through Netlify functions
+
+   ✅ Lambda functions deployed
+
+      https://boring-dijkstra-859733.netlify.com/.netlify/functions/server
+    
+      See `/lambda/server.js` for all routes (Lambda functions)
+    
+
+   [ ] Still need to connect a DB, to serve data
 

@@ -19,6 +19,22 @@ which abstracts Lambda functions as a *decorator* in express.
 
 https://functions-playground.netlify.com/
 
+### ❌ CONS 
+
+* No baked-in data stores, no permanent disk available, so cannot use `diskdb` 
+  + 512 MB `/temp` but ephemeral in nature
+
+  + bring your own DB, connect to Netlify functions
+
+    
+    
+
+* cannot have any large or long-running backend requests
+  + max 5 minute execution time
+
+    
+    
+
 ## Examples:
 
 ### In plain Lambda function
