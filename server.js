@@ -1,6 +1,8 @@
 // import express and init server using express()
 const express = require("express");
+const serverless = require('serverless-http');
 const server = express();
+const router = express.Router();
 const db = require('diskdb');
 db.connect('./data', ['condos', 'logs']);
 
@@ -39,3 +41,17 @@ const date_last_run = db.logs.find({
 if (!date_last_run.length) {
 	scrape();
 }
+
+
+// Netlify Lambda
+router.get("/", (req, res) => {
+	res.json("Hello Netlify Lambda");
+})
+
+router.get("/api/items", (req, res) => {
+	res.json(db.condos.find());
+})
+
+server.use('/.netlify/functions/server', router);
+
+module.exports.handler = serverless(server);
