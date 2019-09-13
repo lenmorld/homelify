@@ -28,10 +28,12 @@ https://functions-playground.netlify.com/
 
     
     
+    
 
 * cannot have any large or long-running backend requests
   + max 5 minute execution time
 
+    
     
     
 
@@ -64,6 +66,4 @@ server.use('/.netlify/functions/server', router);
 
 module.exports.handler = serverless(server);
 ```
-
-Then go to http://localhost:4000/.netlify/functions/server/
 
