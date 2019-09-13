@@ -4,9 +4,9 @@ const serverless = require('serverless-http');
 const server = express();
 const router = express.Router();
 const db = require('diskdb');
-db.connect('./data', ['condos', 'logs']);
+db.connect('../data', ['condos', 'logs']);
 
-const scrape = require('./scrape');
+const scrape = require('../scrape');
 
 const port = 4000;
 
@@ -25,10 +25,10 @@ server.get("/api/json", function (req, res) {
 	res.json({ name: "Lenny" });
 });
 
-server.listen(port, function () {
-	// Callback function
-	console.log("Running server at " + port);
-});
+// server.listen(port, function () {
+// 	// Callback function
+// 	console.log("Running server at " + port);
+// });
 
 // RUN SCRAPER once a day
 // TODO: maybe put this in a config, .env file instead of db
@@ -54,4 +54,5 @@ router.get("/api/items", (req, res) => {
 
 server.use('/.netlify/functions/server', router);
 
+module.exports = server;
 module.exports.handler = serverless(server);
